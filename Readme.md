@@ -1,95 +1,143 @@
+
 # Automate Customer Feedback Classification with AI, Google Sheets, and Slack Alerts
 
-This workflow automates the process of collecting customer feedback from forms and emails, analyzes it using AI, classifies it by category and sentiment, logs it into Google Sheets, and routes it to the right communication channels like Slack or email. It closes the feedback loop efficiently by ensuring every review is categorized, tracked, and acted upon. :contentReference[oaicite:1]{index=1}
+This workflow automates the process of collecting customer feedback from forms and emails, analyzes it using AI, classifies it by category and sentiment, logs it into Google Sheets, and routes it to the right communication channels like Slack or email.
+
+It closes the feedback loop efficiently by ensuring every review is categorized, tracked, and acted upon.
 
 ---
 
-## Who’s it for
+## Who’s It For
 
-- Product managers wanting structured customer insights
-- Customer support teams needing fast issue routing
-- Engineering teams who want to be alerted to bugs quickly
-- Growth & UX teams tracking feature requests and usability feedback
-- Any business managing customer feedback at scale :contentReference[oaicite:2]{index=2}
-
----
-
-## How it works
-
-1. **Form Submission Trigger** captures reviews submitted via customer review forms.
-2. **Gmail Trigger** listens for new feedback emails.
-3. **Extract Details (Code Node)** parses sender details and extracts the actual review text.
-4. **AI Node (LLM)** summarizes the feedback, determines sentiment, and classifies it (e.g., Bug, Feature Request, UX Issue, Other).
-5. **Google Gemini (optional)** provides advanced classification/summarization.
-6. **Google Sheets Node** logs all structured feedback for historical tracking.
-7. **Switch Node** routes feedback into separate flows by category.
-8. **Slack Node** instantly notifies the team of critical feedback (e.g., Bugs).
-9. **Email Node** sends reports to relevant stakeholders (e.g., Feature Requests to product managers). :contentReference[oaicite:3]{index=3}
+* Product managers wanting structured customer insights
+* Customer support teams needing fast issue routing
+* Engineering teams who want to be alerted to bugs quickly
+* Growth & UX teams tracking feature requests and usability feedback
+* Any business managing customer feedback at scale
 
 ---
 
-## How to set up
+## How It Works
 
-1. Import the workflow JSON into your n8n instance.
+1. **Form Submission Trigger**
+   Captures reviews submitted via customer feedback or review forms.
+
+2. **Gmail Trigger**
+   Listens for new feedback emails in a specified inbox or label.
+
+3. **Extract Details (Code Node)**
+   Parses sender details and extracts the actual review text.
+
+4. **AI Node (LLM)**
+
+   * Summarizes feedback
+   * Detects sentiment (Positive / Neutral / Negative)
+   * Classifies feedback (Bug, Feature Request, UX Issue, Other)
+
+5. **Google Gemini (Optional)**
+   Provides advanced classification or summarization if enabled.
+
+6. **Google Sheets Node**
+   Logs structured feedback for tracking and reporting.
+
+7. **Switch Node**
+   Routes feedback into different flows based on category.
+
+8. **Slack Node**
+   Instantly notifies teams about critical feedback (e.g., Bugs).
+
+9. **Email Node**
+   Sends feedback summaries to relevant stakeholders.
+
+---
+
+## How to Set Up
+
+1. Import the workflow JSON into your **n8n** instance.
 2. Connect credentials for:
-   - Gmail (for receiving/sending feedback)
-   - Google Sheets (for logging reviews)
-   - Slack (for real-time team alerts)
-3. Configure your Google Sheet (columns for Date, Reviewer, Sentiment, Category, Feedback).
-4. Adjust the AI node prompt to reflect your team’s preferred categories.
-5. Set Slack channels and email recipients for notifications.
-6. Activate the workflow. :contentReference[oaicite:4]{index=4}
+
+   * **Gmail** (receiving and sending feedback)
+   * **Google Sheets** (logging feedback)
+   * **Slack** (real-time notifications)
+3. Create a Google Sheet with the following columns:
+
+   * Date
+   * Reviewer
+   * Sentiment
+   * Category
+   * Feedback
+4. Adjust the **AI node prompt** to match your preferred feedback categories.
+5. Configure:
+
+   * Slack channels for alerts
+   * Email recipients for reports
+6. Activate the workflow.
 
 ---
 
 ## Requirements
 
-- n8n (cloud or self-hosted)
-- Gmail API access (OAuth2 connected in n8n)
-- Google Sheets API access
-- Slack webhook or OAuth connection
-- (Optional) Google Gemini or another LLM integration :contentReference[oaicite:5]{index=5}
+* n8n (Cloud or Self-hosted)
+* Gmail API access (OAuth2 configured in n8n)
+* Google Sheets API access
+* Slack Webhook or OAuth connection
+* Optional: Google Gemini or another LLM provider
 
 ---
 
-## How to customize
+## How to Customize
 
-- Modify the AI prompt to classify into different categories (e.g., “Support Issue”, “Billing Problem”).
-- Extend the Google Sheet schema to include product version, tags, or priority scores.
-- Add a translation step if feedback is multilingual.
-- Replace Slack notifications with Teams/Discord if needed.
-- Connect to Jira or Trello to auto-create tasks for certain categories. :contentReference[oaicite:6]{index=6}
+* Modify the AI prompt to use custom categories such as:
+
+  * Support Issue
+  * Billing Problem
+  * Performance Issue
+* Extend the Google Sheet schema with:
+
+  * Product version
+  * Priority score
+  * Tags
+* Add a translation step for multilingual feedback.
+* Replace Slack with Microsoft Teams or Discord.
+* Integrate with Jira, Trello, or Asana to auto-create tasks.
 
 ---
 
 ## Add-ons
 
-- Sentiment-based alerts: Trigger Slack notifications only if sentiment is negative.
-- Monthly report generator: Compile all feedback into a PDF and email it automatically.
-- CRM integration: Sync categorized feedback into HubSpot or Salesforce.
-- Auto-response emails: Acknowledge receipt of customer feedback via Gmail. :contentReference[oaicite:7]{index=7}
+* **Sentiment-based alerts**
+  Trigger Slack notifications only for negative feedback.
+
+* **Monthly report generator**
+  Automatically compile feedback into a PDF and email it.
+
+* **CRM integration**
+  Sync categorized feedback into HubSpot or Salesforce.
+
+* **Auto-response emails**
+  Send an acknowledgment email when feedback is received.
 
 ---
 
 ## Use Case Examples
 
-- SaaS product team routes all Bug feedback directly to engineering Slack channel.
-- UX team receives only “UX Issue” categorized feedback for design improvements.
-- Marketing team logs Feature Requests into Google Sheets for roadmap prioritization.
-- Customer support automatically responds with a thank-you email for all submissions. :contentReference[oaicite:8]{index=8}
+* SaaS teams route all **Bug** feedback directly to an engineering Slack channel.
+* UX teams receive only **UX Issue** feedback for design improvements.
+* Marketing teams log **Feature Requests** for roadmap planning.
+* Customer support sends automated thank-you emails for every submission.
 
 ---
 
 ## Common Troubleshooting
 
-| Issue                    | Possible Cause                            | Solution                                         |
-| ------------------------ | ----------------------------------------- | ------------------------------------------------ | ------------------------------------- |
-| Workflow doesn’t trigger | Gmail/Form node not authenticated         | Reconnect Gmail / check webhook form integration |
-| No data extracted        | Code node parsing wrong field             | Update regex/parsing logic to match email format |
-| AI classification fails  | Invalid LLM credentials or quota exceeded | Reconnect LLM node / check usage limits          |
-| Feedback not logged      | Wrong Google Sheet ID or missing sharing  | Verify Sheet ID and grant access                 |
-| Slack messages not sent  | Invalid webhook or channel not found      | Reconfigure Slack node with valid credentials    |
-| Email reports fail       | Gmail OAuth token expired                 | Refresh Gmail credentials in n8n                 | :contentReference[oaicite:9]{index=9} |
+| Issue                    | Possible Cause                            | Solution                                          |
+| ------------------------ | ----------------------------------------- | ------------------------------------------------- |
+| Workflow doesn’t trigger | Gmail/Form node not authenticated         | Reconnect Gmail or check webhook/form integration |
+| No data extracted        | Code node parsing wrong field             | Update regex/parsing logic to match email format  |
+| AI classification fails  | Invalid LLM credentials or quota exceeded | Reconnect LLM node or check usage limits          |
+| Feedback not logged      | Wrong Google Sheet ID or missing sharing  | Verify Sheet ID and grant access to the account   |
+| Slack messages not sent  | Invalid webhook or channel not found      | Reconfigure Slack node with valid credentials     |
+| Email reports fail       | Gmail OAuth token expired                 | Refresh Gmail credentials in n8n                  |
 
 ---
 
@@ -97,7 +145,9 @@ This workflow automates the process of collecting customer feedback from forms a
 
 Our n8n automation experts at **WeblineIndia** can help you:
 
-- Fine-tune the AI prompts for better categorization accuracy
-- Build custom dashboards from your Google Sheet data
-- Add multilingual feedback handling
-- Connect to your ticketing system (Jira, Trello, Asana) for seamless issue tracking :contentReference[oaicite:10]{index=10}
+* Fine-tune AI prompts for better classification accuracy
+* Build custom dashboards from Google Sheets data
+* Add multilingual feedback handling
+* Integrate with ticketing systems like Jira, Trello, or Asana
+
+---
